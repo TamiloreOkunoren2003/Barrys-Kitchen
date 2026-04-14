@@ -152,6 +152,11 @@
     .menu-item-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 400; color: var(--text-dark); }
     .menu-item-price { display: none; }
     .menu-item-desc { font-size: .82rem; color: var(--text-light); line-height: 1.6; }
+    .menu-item-img-wrap { overflow: hidden; height: 180px; border-radius: var(--radius); margin-bottom: 16px; }
+    .menu-item-img-wrap img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.25) contrast(1.05); display: block; transform: scale(1.35); transition: transform .4s; }
+    .size-btn-row { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+    .size-btn { flex: 1; min-width: 0; padding: 7px 8px; background: transparent; border: 1.5px solid var(--green); color: var(--green); font-size: .7rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; border-radius: var(--radius); cursor: pointer; transition: background var(--ease), color var(--ease); white-space: nowrap; }
+    .size-btn:hover, .size-btn.added { background: var(--green); color: #fff; }
 
     /* ── GALLERY ────────────────────────── */
     #gallery { padding: 100px 5vw; background: var(--white); text-align: center; }
@@ -538,34 +543,34 @@
   <!-- RICE DISHES -->
   <div id="tab-rice" class="menu-panel active" role="tabpanel" aria-labelledby="btn-rice">
     <div class="menu-grid">
-      <div class="menu-item reveal">
-        <img class="menu-item-img" src="images/Jollof Rice (2).jpeg" alt="Jollof Rice" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Jollof Rice</span><span class="menu-item-price">$80 / full pan</span></div>
+      <div class="menu-item reveal" data-sizes="Half Pan:40|Full Pan:80">
+        <div class="menu-item-img-wrap"><img src="images/Jollof Rice (2).jpeg" alt="Jollof Rice" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Jollof Rice</span></div>
         <p class="menu-item-desc">Smoky, flavour-packed jollof made in an open pot for that authentic party taste.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
-        <img class="menu-item-img" src="images/Fried Rice (2).jpeg" alt="Basmati Fried Rice" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Basmati Fried Rice</span><span class="menu-item-price">$120 / full pan</span></div>
+      <div class="menu-item reveal reveal-d1" data-sizes="Half Pan:60|Full Pan:120">
+        <div class="menu-item-img-wrap"><img src="images/Fried Rice (2).jpeg" alt="Basmati Fried Rice" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Basmati Fried Rice</span></div>
         <p class="menu-item-desc">Colorful, fragrant fried rice loaded with fresh vegetables and a rich umami depth.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
-        <img class="menu-item-img" src="images/Singapore Noodles.jpeg" alt="Singapore Noodles" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Singapore Noodles</span><span class="menu-item-price">$120 / full pan</span></div>
+      <div class="menu-item reveal reveal-d2" data-sizes="Half Pan:60|Full Pan:120">
+        <div class="menu-item-img-wrap"><img src="images/Singapore Noodles.jpeg" alt="Singapore Noodles" loading="lazy" style="object-position: center 20%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Singapore Noodles</span></div>
         <p class="menu-item-desc">Stir-fried vermicelli noodles with shrimp, vegetables and a bold, aromatic spice blend.</p>
       </div>
-      <div class="menu-item reveal reveal-d3">
+      <div class="menu-item reveal reveal-d3" data-sizes="Half Pan:75|Full Pan:150">
         <img class="menu-item-img" src="images/Ofada Rice.jpeg" alt="Ofada Rice" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Ofada Rice</span><span class="menu-item-price">$150 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Ofada Rice</span></div>
         <p class="menu-item-desc">Indigenous unpolished Nigerian rice with a distinct earthy flavour, served traditionally.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
+      <div class="menu-item reveal reveal-d1" data-sizes="Half Pan:100|Full Pan:200">
         <img class="menu-item-img" src="images/Yam Porridge.jpeg" alt="Yam Porridge" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Yam Porridge</span><span class="menu-item-price">$200 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Yam Porridge</span></div>
         <p class="menu-item-desc">Rich, spiced yam porridge slow-cooked with palm oil, crayfish and seasoning.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
-        <img class="menu-item-img" src="images/Ewa_Agoyin.jpeg" alt="Ewa (Woro/Agoyin)" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Ewa (Woro/Agoyin)</span><span class="menu-item-price">$120 / full pan</span></div>
+      <div class="menu-item reveal reveal-d2" data-sizes="Half Pan:60|Full Pan:120">
+        <img class="menu-item-img" src="images/Ewa_Agoyin.jpeg" alt="Ewa Agoyin" loading="lazy"/>
+        <div class="menu-item-header"><span class="menu-item-name">Ewa Agoyin</span></div>
         <p class="menu-item-desc">Mashed black-eyed beans served with a bold, caramelised pepper and onion sauce.</p>
       </div>
     </div>
@@ -574,35 +579,40 @@
   <!-- SOUPS & STEWS -->
   <div id="tab-soups" class="menu-panel" role="tabpanel" aria-labelledby="btn-soups">
     <div class="menu-grid">
-      <div class="menu-item reveal">
+      <div class="menu-item reveal" data-sizes="Bowl:75|Half Pan:150|Full Pan:300">
         <img class="menu-item-img" src="images/Beef Stew - Copy.jpeg" alt="Signature Ata Rilli" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Signature Ata Rilli</span><span class="menu-item-price">$300 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Signature Ata Rilli</span></div>
         <p class="menu-item-desc">Our signature stew — bold, richly spiced peppered sauce with deep layers of flavour.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
-        <img class="menu-item-img" src="images/Ofada Sauce.jpeg" alt="Ofada Sauce" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Ofada Sauce</span><span class="menu-item-price">$300 / full pan</span></div>
+      <div class="menu-item reveal reveal-d1" data-sizes="Bowl:75|Half Pan:150|Full Pan:300">
+        <div class="menu-item-img-wrap"><img src="images/Ofada Sauce.jpeg" alt="Ofada Sauce" loading="lazy" style="object-position: center 20%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Ofada Sauce</span></div>
         <p class="menu-item-desc">The classic designer stew — fermented locust beans, assorted meats, and fiery pepper blend.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
-        <img class="menu-item-img" src="images/Efo Riro.jpeg" alt="Efo Riro" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Efo Riro</span><span class="menu-item-price">$200 / full pan</span></div>
+      <div class="menu-item reveal reveal-d2" data-sizes="Bowl:50|Half Pan:100|Full Pan:200">
+        <div class="menu-item-img-wrap"><img src="images/Efo Riro.jpeg" alt="Efo Riro" loading="lazy" style="object-position: center 20%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Efo Riro</span></div>
         <p class="menu-item-desc">Rich Yoruba spinach stew slow-cooked with palm oil, assorted meats, crayfish and peppers.</p>
       </div>
-      <div class="menu-item reveal reveal-d3">
-        <img class="menu-item-img" src="images/Efo Riro.jpeg" alt="Efo Elegusi" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Efo Elegusi</span><span class="menu-item-price">$200 / full pan</span></div>
+      <div class="menu-item reveal reveal-d3" data-sizes="Bowl:50|Half Pan:100|Full Pan:200">
+        <div class="menu-item-img-wrap"><img src="images/Efo Elegusi.jpeg" alt="Efo Elegusi" loading="lazy" style="object-position: center 30%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Efo Elegusi</span></div>
         <p class="menu-item-desc">Hearty melon seed soup cooked with leafy greens, palm oil, assorted meats and crayfish.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
-        <img class="menu-item-img" src="images/Peppered Chicken (2).jpeg" alt="Chicken Stew" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Chicken Stew</span><span class="menu-item-price">$160 / full pan</span></div>
+      <div class="menu-item reveal reveal-d1" data-sizes="Half Pan:80|Full Pan:160">
+        <div class="menu-item-img-wrap"><img src="images/Peppered Chicken (2).jpeg" alt="Chicken Stew" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Chicken Stew</span></div>
         <p class="menu-item-desc">Tender chicken slow-simmered in a rich tomato and pepper stew base.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
-        <img class="menu-item-img" src="images/Peppered Turkey.jpeg" alt="Turkey Stew" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Turkey Stew</span><span class="menu-item-price">$140 / full pan</span></div>
+      <div class="menu-item reveal reveal-d2" data-sizes="Half Pan:70|Full Pan:140">
+        <div class="menu-item-img-wrap"><img src="images/Peppered Turkey.jpeg" alt="Turkey Stew" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Turkey Stew</span></div>
         <p class="menu-item-desc">Succulent turkey pieces cooked down in a well-seasoned tomato stew.</p>
+      </div>
+      <div class="menu-item reveal reveal-d3" data-sizes="Half Pan:150|Full Pan:300">
+        <div class="menu-item-img-wrap"><img src="images/Assorted stew.jpeg" alt="Assorted Stew" loading="lazy" style="object-position: center 30%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Assorted Stew</span></div>
+        <p class="menu-item-desc">A hearty blend of assorted meats cooked down in a rich, deeply seasoned stew base.</p>
       </div>
     </div>
   </div>
@@ -610,35 +620,40 @@
   <!-- SIDES & PROTEINS -->
   <div id="tab-protein" class="menu-panel" role="tabpanel" aria-labelledby="btn-protein">
     <div class="menu-grid">
-      <div class="menu-item reveal">
-        <img class="menu-item-img" src="images/Peppered Chicken (2).jpeg" alt="Chicken" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Chicken</span><span class="menu-item-price">$160 / full pan</span></div>
+      <div class="menu-item reveal" data-sizes="Full Pan:160">
+        <div class="menu-item-img-wrap"><img src="images/Peppered Chicken (2).jpeg" alt="Chicken" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Chicken</span></div>
         <p class="menu-item-desc">Oven-roasted and peppered chicken — a crowd-pleasing classic at every event.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
-        <img class="menu-item-img" src="images/Peppered Turkey.jpeg" alt="Turkey" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Turkey</span><span class="menu-item-price">$150 / full pan</span></div>
+      <div class="menu-item reveal reveal-d1" data-sizes="Full Pan:150">
+        <div class="menu-item-img-wrap"><img src="images/Peppered Turkey.jpeg" alt="Turkey" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Turkey</span></div>
         <p class="menu-item-desc">Richly seasoned turkey, tender and full of flavour — a Nigerian celebration staple.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
+      <div class="menu-item reveal reveal-d2" data-sizes="Full Pan:270">
         <img class="menu-item-img" src="images/Peppered_Fish.jpeg" alt="Whiting Fish" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Whiting Fish</span><span class="menu-item-price">$270 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Whiting Fish</span></div>
         <p class="menu-item-desc">Fresh whiting fish, fried or stewed to perfection with aromatic spices.</p>
       </div>
-      <div class="menu-item reveal reveal-d3">
+      <div class="menu-item reveal reveal-d3" data-sizes="Full Pan:250">
         <img class="menu-item-img" src="images/Peppered_Fish.jpeg" alt="Tilapia Fish" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Tilapia Fish</span><span class="menu-item-price">$250 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Tilapia Fish</span></div>
         <p class="menu-item-desc">Golden fried tilapia, seasoned and cooked to flaky, flavourful perfection.</p>
       </div>
-      <div class="menu-item reveal reveal-d1">
+      <div class="menu-item reveal reveal-d1" data-sizes="Half Pan:60|Full Pan:120">
         <img class="menu-item-img" src="images/Fried_Plantain.jpeg" alt="Fried Plantain" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Fried Plantain</span><span class="menu-item-price">$120 / full pan</span></div>
+        <div class="menu-item-header"><span class="menu-item-name">Fried Plantain</span></div>
         <p class="menu-item-desc">Sweet ripe plantain, fried golden — an irresistible side that pairs perfectly with everything.</p>
       </div>
-      <div class="menu-item reveal reveal-d2">
-        <img class="menu-item-img" src="images/Moi Moi.jpeg" alt="Moi-Moi" loading="lazy"/>
-        <div class="menu-item-header"><span class="menu-item-name">Moi-Moi</span><span class="menu-item-price">$3.50 / piece</span></div>
+      <div class="menu-item reveal reveal-d2" data-sizes="Per Piece:3.50">
+        <div class="menu-item-img-wrap"><img src="images/Moi Moi.jpeg" alt="Moi-Moi" loading="lazy" style="object-position: center 25%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Moi-Moi</span></div>
         <p class="menu-item-desc">Steamed bean pudding made with blended black-eyed peas, peppers and seasoning.</p>
+      </div>
+      <div class="menu-item reveal reveal-d3" data-sizes="Full Pan:150">
+        <div class="menu-item-img-wrap"><img src="images/Gizdodo.jpeg" alt="Gizdodo" loading="lazy" style="object-position: center 30%;"/></div>
+        <div class="menu-item-header"><span class="menu-item-name">Gizdodo</span></div>
+        <p class="menu-item-desc">A beloved Nigerian favourite — seasoned gizzards tossed with fried sweet plantain and peppers.</p>
       </div>
     </div>
   </div>
@@ -661,7 +676,7 @@
         <div class="pt-main-item"><span>Coconut Rice</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>White Rice</span><span>$25</span><span>$40</span></div>
         <div class="pt-main-item"><span>Singapore Noodles</span><span>$60</span><span>$120</span></div>
-        <div class="pt-main-item"><span>Ewa (Woro/Agoyin)</span><span>$60</span><span>$120</span></div>
+        <div class="pt-main-item"><span>Ewa Agoyin</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>Yam Porridge</span><span>$100</span><span>$200</span></div>
       </div>
     </div>
@@ -903,11 +918,11 @@
       <div><div class="contact-detail-label">Phone</div><div class="contact-detail-value"><a href="tel:+13467142255">346-714-2255</a></div></div>
     </div>
     <div class="social-row" aria-label="Social media">
-      <a href="#" class="social-btn" aria-label="Instagram">
+      <a href="https://www.instagram.com/barryskitchenhtx" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
       </a>
-      <a href="#" class="social-btn" aria-label="Facebook">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      <a href="https://www.tiktok.com/@barrys.kitchen3" target="_blank" rel="noopener" class="social-btn" aria-label="TikTok">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.28 8.28 0 0 0 4.84 1.55V6.77a4.85 4.85 0 0 1-1.07-.08z"/></svg>
       </a>
       <a href="tel:+13467142255" class="social-btn" aria-label="Call us">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.58 1.3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.05-1.05a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -1180,23 +1195,45 @@
     document.getElementById('cart-overlay').addEventListener('click', cartClose);
     document.querySelectorAll('.menu-item').forEach(item => {
       const nameEl = item.querySelector('.menu-item-name');
-      const priceEl = item.querySelector('.menu-item-price');
       if (!nameEl) return;
       const name = nameEl.textContent.trim();
-      const priceText = priceEl ? priceEl.textContent.trim() : 'Full Pan';
-      const m = priceText.match(/\$(\d+(?:\.\d+)?)/);
-      const price = m ? parseFloat(m[1]) : 0;
-      const btn = document.createElement('button');
-      btn.className = 'add-to-order-btn';
-      btn.textContent = 'Add to Order';
-      btn.addEventListener('click', () => {
-        cartAdd(name, price, priceText || 'Full Pan');
-        btn.textContent = '✓ Added';
-        btn.classList.add('added');
-        setTimeout(() => { btn.textContent = 'Add to Order'; btn.classList.remove('added'); }, 1500);
-        cartOpen();
+      const sizesAttr = item.dataset.sizes;
+      if (!sizesAttr) return;
+      const sizes = sizesAttr.split('|').map(s => {
+        const parts = s.split(':');
+        return { label: parts[0].trim(), price: parseFloat(parts[1]) };
       });
-      item.appendChild(btn);
+      if (sizes.length === 1) {
+        const btn = document.createElement('button');
+        btn.className = 'add-to-order-btn';
+        btn.textContent = 'Add to Order';
+        btn.addEventListener('click', () => {
+          cartAdd(name, sizes[0].price, sizes[0].label);
+          btn.textContent = '✓ Added';
+          btn.classList.add('added');
+          setTimeout(() => { btn.textContent = 'Add to Order'; btn.classList.remove('added'); }, 1500);
+          cartOpen();
+        });
+        item.appendChild(btn);
+      } else {
+        const row = document.createElement('div');
+        row.className = 'size-btn-row';
+        sizes.forEach(({ label, price }) => {
+          const btn = document.createElement('button');
+          btn.className = 'size-btn';
+          btn.textContent = label;
+          btn.addEventListener('click', () => {
+            cartAdd(`${name} — ${label}`, price, `$${price} / ${label}`);
+            const orig = btn.textContent;
+            btn.textContent = '✓';
+            btn.classList.add('added');
+            setTimeout(() => { btn.textContent = orig; btn.classList.remove('added'); }, 1500);
+            cartOpen();
+          });
+          row.appendChild(btn);
+        });
+        item.appendChild(row);
+      }
     });
   });
 
