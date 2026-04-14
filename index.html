@@ -227,7 +227,8 @@
     #protein-table { padding: 100px 5vw; background: var(--text-dark); text-align: center; }
     #protein-table .section-label { color: var(--gold-light); }
     #protein-table .section-title { color: var(--white); }
-    .pt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 860px; margin: 0 auto; text-align: left; }
+    .pt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 1100px; margin: 0 auto; text-align: left; }
+    .pt-col-full { grid-column: 1 / -1; }
     .pt-col { background: rgba(255,255,255,.04); padding: 40px; }
     .pt-col-header { font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; color: var(--gold-light); margin-bottom: 6px; display: flex; align-items: baseline; gap: 12px; }
     .pt-unit { font-family: var(--font-body); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.35); }
@@ -235,7 +236,28 @@
     .pt-row:last-child { border-bottom: none; }
     .pt-row span:last-child { color: var(--gold-light); font-weight: 500; white-space: nowrap; padding-left: 16px; }
     .pt-note { margin-top: 32px; font-size: .8rem; color: rgba(255,255,255,.35); font-style: italic; letter-spacing: .04em; }
-    @media (max-width: 600px) { .pt-grid { grid-template-columns: 1fr; } .pt-col { padding: 28px 20px; } }
+    .pt-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .pt-item:last-of-type { border-bottom: none; }
+    .pt-item-head { color: rgba(255,255,255,.8); font-size: .92rem; margin-bottom: 4px; }
+    .pt-size-row { display: flex; justify-content: space-between; padding: 2px 0 2px 14px; font-size: .82rem; color: rgba(255,255,255,.5); }
+    .pt-size-row span:last-child { color: var(--gold-light); font-weight: 500; white-space: nowrap; padding-left: 16px; }
+    .pt-main-table { width: 100%; margin-top: 12px; }
+    .pt-main-head { display: grid; grid-template-columns: 1fr 110px 110px; gap: 8px; padding: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,.12); }
+    .pt-main-head span:not(:first-child) { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); text-align: right; }
+    .pt-main-item { display: grid; grid-template-columns: 1fr 110px 110px; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06); align-items: center; }
+    .pt-main-item:last-child { border-bottom: none; }
+    .pt-main-item span:first-child { color: rgba(255,255,255,.8); font-size: .9rem; }
+    .pt-main-item span:not(:first-child) { color: var(--gold-light); font-weight: 500; text-align: right; }
+    .pt-main-divider { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 4px 0; }
+    .pt-stew-table { width: 100%; margin-top: 12px; }
+    .pt-stew-head { display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 8px; padding: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,.12); }
+    .pt-stew-head span:not(:first-child) { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); text-align: right; }
+    .pt-stew-item { display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06); align-items: center; }
+    .pt-stew-item:last-child { border-bottom: none; }
+    .pt-stew-item span:first-child { color: rgba(255,255,255,.8); font-size: .9rem; }
+    .pt-stew-item span:not(:first-child) { color: var(--gold-light); font-weight: 500; text-align: right; }
+    .pt-stew-item .pt-na { color: rgba(255,255,255,.22); }
+    @media (max-width: 600px) { .pt-grid { grid-template-columns: 1fr; } .pt-col { padding: 28px 20px; } .pt-main-head, .pt-main-item { grid-template-columns: 1fr 80px 80px; } .pt-stew-head, .pt-stew-item { grid-template-columns: 1fr 68px 68px 68px; font-size: .8rem; } }
 
     /* ── BACK TO TOP ────────────────────── */
     #btt { position: fixed; bottom: 28px; right: 28px; z-index: 90; width: 44px; height: 44px; background: var(--green); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(20px); transition: opacity var(--ease), transform var(--ease), background var(--ease); pointer-events: none; }
@@ -295,7 +317,7 @@
     </div>
   </div>
   <div class="hero-right" role="img" aria-label="Nigerian catering spread">
-    <img class="hero-right-img" src="images/Pre_Set_Up_Spread.jpeg" alt="Barry's Kitchen pre-set catering spread" />
+    <img class="hero-right-img" src="images/Opening Picture.jpeg" alt="Barry's Kitchen catering spread" />
     <div class="hero-right-inner">
       <blockquote class="hero-quote">"Super fresh Nigerian meals that speaks delicious in every bite."</blockquote>
       <div class="hero-stats">
@@ -391,7 +413,7 @@
       </div>
     </article>
     <article class="service-card reveal reveal-d2" aria-labelledby="svc3">
-      <div class="service-card-bg" style="background-image:url('images/Jollof Rice (2).jpeg')" role="img" aria-label="Everyday fresh jollof rice meal"></div>
+      <div class="service-card-bg" style="background-image:url('images/Everyday Meals.jpeg')" role="img" aria-label="Everyday fresh Nigerian meals"></div>
       <div class="service-card-content">
         <span class="service-num" aria-hidden="true">03</span>
         <div class="service-icon" aria-hidden="true">🍱</div>
@@ -538,31 +560,37 @@
 
   <div class="pt-grid reveal reveal-d2">
 
-    <div class="pt-col">
-      <div class="pt-col-header">Rice &amp; Mains <span class="pt-unit">Full Pan</span></div>
-      <div class="pt-row"><span>Jollof Rice</span><span>$80</span></div>
-      <div class="pt-row"><span>Basmati Fried Rice</span><span>$120</span></div>
-      <div class="pt-row"><span>Coconut Rice</span><span>$120</span></div>
-      <div class="pt-row"><span>Singapore Noodles</span><span>$120</span></div>
-      <div class="pt-row"><span>Ofada Rice</span><span>$150</span></div>
-      <div class="pt-row"><span>Yam Porridge</span><span>$200</span></div>
-      <div class="pt-row"><span>Ewa Agoyin</span><span>$120</span></div>
-      <div class="pt-row"><span>White Rice</span><span>$40</span></div>
+    <div class="pt-col pt-col-full">
+      <div class="pt-col-header">Mains</div>
+      <div class="pt-main-table">
+        <div class="pt-main-head"><span></span><span>Full Pan</span><span>Half Pan</span></div>
+        <div class="pt-main-item"><span>Jollof Rice</span><span>$80</span><span>$40</span></div>
+        <div class="pt-main-item"><span>Basmati Fried Rice</span><span>$120</span><span>$60</span></div>
+        <div class="pt-main-item"><span>Coconut Rice</span><span>$120</span><span>$60</span></div>
+        <div class="pt-main-item"><span>White Rice</span><span>$40</span><span>$25</span></div>
+        <hr class="pt-main-divider"/>
+        <div class="pt-main-item"><span>Singapore Noodles</span><span>$120</span><span>$60</span></div>
+        <div class="pt-main-item"><span>Ewa Agoyin</span><span>$120</span><span>$60</span></div>
+        <div class="pt-main-item"><span>Yam Porridge</span><span>$200</span><span>$100</span></div>
+      </div>
     </div>
 
-    <div class="pt-col">
-      <div class="pt-col-header">Soups &amp; Stews <span class="pt-unit">Full Pan</span></div>
-      <div class="pt-row"><span>Signature Ata Rilli</span><span>$300</span></div>
-      <div class="pt-row"><span>Goatmeat Stew</span><span>$440</span></div>
-      <div class="pt-row"><span>Beef Stew</span><span>$330</span></div>
-      <div class="pt-row"><span>Chicken Stew</span><span>$220</span></div>
-      <div class="pt-row"><span>Turkey Stew</span><span>$200</span></div>
-      <div class="pt-row"><span>Fish Stew</span><span>$300</span></div>
-      <div class="pt-row"><span>Assorted Stew</span><span>$300</span></div>
-      <div class="pt-row"><span>Ayamase</span><span>$300</span></div>
-      <div class="pt-row"><span>Ofada Sauce</span><span>$300</span></div>
-      <div class="pt-row"><span>Efo Riro</span><span>$200</span></div>
-      <div class="pt-row"><span>Egusi</span><span>$200</span></div>
+    <div class="pt-col pt-col-full">
+      <div class="pt-col-header">Soups &amp; Stews</div>
+      <div class="pt-stew-table">
+        <div class="pt-stew-head"><span></span><span>Full Pan</span><span>Half Pan</span><span>Bowl</span></div>
+        <div class="pt-stew-item"><span>Signature Ata Rilli</span><span>$300</span><span>$150</span><span>$75</span></div>
+        <div class="pt-stew-item"><span>Ayamase Sauce</span><span>$300</span><span>$150</span><span>$75</span></div>
+        <div class="pt-stew-item"><span>Ofada Sauce</span><span>$300</span><span>$150</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Efo Riro</span><span>$200</span><span>$100</span><span>$50</span></div>
+        <div class="pt-stew-item"><span>Efo Elegusi</span><span>$200</span><span>$100</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Goatmeat Stew</span><span>$380</span><span>$195</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Beef Stew</span><span>$280</span><span>$140</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Chicken Stew</span><span>$160</span><span>$80</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Turkey Stew</span><span>$140</span><span>$70</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Fish Stew</span><span>$270</span><span>$140</span><span class="pt-na">—</span></div>
+        <div class="pt-stew-item"><span>Assorted Stew</span><span>$300</span><span>$150</span><span class="pt-na">—</span></div>
+      </div>
     </div>
 
     <div class="pt-col">
@@ -581,6 +609,7 @@
       <div class="pt-row"><span>Moi-Moi</span><span>$3.50 / pc</span></div>
       <div class="pt-row"><span>Fried Plantain</span><span>$120 / pan</span></div>
       <div class="pt-row"><span>Special Salad</span><span>$160 / pan</span></div>
+      <div class="pt-row"><span>Pepper Soup</span><span>per order</span></div>
       <div class="pt-col-header" style="margin-top:28px;">Wraps <span class="pt-unit">Per Piece</span></div>
       <div class="pt-row"><span>Poundo Yam</span><span>$3.50</span></div>
       <div class="pt-row"><span>Semovita</span><span>$2.50</span></div>
@@ -671,6 +700,14 @@
     <div class="gallery-cell wide reveal reveal-d3">
       <img src="images/Protein Table.jpeg" alt="Barry's Kitchen full catering display" loading="lazy"/>
       <span class="gallery-label">Full Catering Display</span>
+    </div>
+    <div class="gallery-cell wide reveal reveal-d1">
+      <img src="images/Stews.jpeg" alt="Stews and soups in bowls" loading="lazy"/>
+      <span class="gallery-label">Soups &amp; Stews</span>
+    </div>
+    <div class="gallery-cell reveal reveal-d2">
+      <img src="images/Stews 2.jpeg" alt="Row of stew bowls" loading="lazy"/>
+      <span class="gallery-label">Signature Bowls</span>
     </div>
   </div>
 </section>
