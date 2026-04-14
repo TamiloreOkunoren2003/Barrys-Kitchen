@@ -227,6 +227,18 @@
     .review-success-icon { font-size: 2.6rem; margin-bottom: 12px; }
     .review-success-msg { font-family: var(--font-display); font-size: 1.3rem; font-style: italic; color: var(--green); }
     .review-success-sub { font-size: .85rem; color: var(--text-mid); margin-top: 8px; }
+    /* Customer reviews display */
+    .reviews-published { max-width: 1100px; margin: 64px auto 0; }
+    .reviews-pub-heading { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-mid); text-align: center; margin-bottom: 28px; }
+    .review-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; }
+    .review-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; text-align: left; display: flex; flex-direction: column; gap: 10px; }
+    .review-card-stars { color: var(--gold); font-size: 1rem; letter-spacing: 2px; }
+    .review-card-text { font-family: var(--font-display); font-size: 1rem; font-style: italic; font-weight: 300; color: var(--text-dark); line-height: 1.65; flex: 1; }
+    .review-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .review-card-name { font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
+    .review-card-date { font-size: .7rem; color: var(--text-mid); }
+    .reviews-loading { text-align: center; color: var(--text-mid); font-size: .85rem; padding: 20px 0; letter-spacing: .05em; }
+    .reviews-divider { max-width: 620px; margin: 48px auto; border: none; border-top: 1px solid var(--border); }
     /* ── CONTACT ────────────────────────── */
     #contact { display: grid; grid-template-columns: 1fr 1fr; }
     .contact-logo { width: 52px; height: 52px; object-fit: contain; border-radius: 50%; margin-bottom: 22px; opacity: .82; border: 1.5px solid rgba(255,255,255,.12); }
@@ -844,6 +856,16 @@
   <h2 id="review-heading" class="section-title reveal reveal-d1">Leave a <em>Review</em></h2>
   <div class="gold-rule reveal reveal-d2" aria-hidden="true"><span></span><i></i><span></span></div>
 
+  <!-- Published reviews grid -->
+  <div class="reviews-published" id="reviews-published">
+    <p class="reviews-pub-heading">What Our Customers Say</p>
+    <div class="review-cards-grid" id="customer-reviews-grid">
+      <p class="reviews-loading">Loading reviews…</p>
+    </div>
+  </div>
+
+  <hr class="reviews-divider"/>
+
   <div class="review-form-wrap">
     <div id="review-form-area">
       <label class="review-label" for="review-name">Your Name</label>
@@ -861,13 +883,13 @@
       <label class="review-label" for="review-text">Your Review</label>
       <textarea class="review-field" id="review-text" placeholder="Tell us about your experience with Barry's Kitchen…" rows="5"></textarea>
 
-      <button class="review-submit-btn" id="review-submit-btn" type="button" onclick="submitReview()">Send Review via WhatsApp</button>
+      <button class="review-submit-btn" id="review-submit-btn" type="button" onclick="submitReview()">Submit Review</button>
     </div>
 
     <div class="review-success" id="review-success">
       <div class="review-success-icon">&#10003;</div>
       <p class="review-success-msg">Thank you for your review!</p>
-      <p class="review-success-sub">Your message has been sent to us via WhatsApp. We truly appreciate your feedback.</p>
+      <p class="review-success-sub">Your review is now live on the site. We truly appreciate your feedback.</p>
     </div>
   </div>
 </section>
@@ -1180,31 +1202,102 @@
     });
   });
 
-  /* REVIEW FORM */
+  /* FIREBASE + REVIEW FORM
+   * ─────────────────────────────────────────────────────────────────
+   * SETUP (one-time, ~5 minutes):
+   * 1. Go to https://console.firebase.google.com and sign in with Google
+   * 2. Click "Add project" → name it "barrys-kitchen" → Create
+   * 3. In the left sidebar: Build → Firestore Database → Create database
+   *    → Start in TEST MODE → choose a region → Enable
+   * 4. Click the gear ⚙ → Project settings → "Your apps" → </> Web
+   *    → Register app → copy the firebaseConfig values below
+   * ─────────────────────────────────────────────────────────────────
+   */
+  const firebaseConfig = {
+    apiKey:            "PASTE_API_KEY_HERE",
+    authDomain:        "PASTE_PROJECT_ID.firebaseapp.com",
+    projectId:         "PASTE_PROJECT_ID_HERE",
+    storageBucket:     "PASTE_PROJECT_ID.appspot.com",
+    messagingSenderId: "PASTE_MESSAGING_SENDER_ID",
+    appId:             "PASTE_APP_ID_HERE"
+  };
+  let db = null;
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+  } catch(e) { console.warn('Firebase not configured yet:', e.message); }
+
+  /* Star rating interaction */
   let reviewRating = 0;
   (function() {
     const stars = document.querySelectorAll('.star-btn');
-    function paint(n) {
-      stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.val) <= n));
-    }
+    function paint(n) { stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.val) <= n)); }
     stars.forEach(s => {
       s.addEventListener('click', () => { reviewRating = parseInt(s.dataset.val); paint(reviewRating); });
       s.addEventListener('mouseenter', () => paint(parseInt(s.dataset.val)));
       s.addEventListener('mouseleave', () => paint(reviewRating));
     });
   })();
-  function submitReview() {
+
+  /* Submit review → save to Firestore → show success */
+  async function submitReview() {
     const name = document.getElementById('review-name').value.trim();
     const text = document.getElementById('review-text').value.trim();
     if (!text) { document.getElementById('review-text').focus(); return; }
-    const stars = reviewRating > 0 ? '⭐'.repeat(reviewRating) : '';
-    const namePart = name ? `*${name}* says:%0A` : '';
-    const ratingPart = stars ? `Rating: ${stars}%0A` : '';
-    const msg = `Hello Barry's Kitchen! I'd like to leave a review:%0A%0A${namePart}${ratingPart}%0A"${encodeURIComponent(text)}"`;
-    window.open(`https://wa.me/13467142255?text=${msg}`, '_blank');
+    const btn = document.getElementById('review-submit-btn');
+    btn.disabled = true; btn.textContent = 'Submitting…';
+    if (db) {
+      try {
+        await db.collection('reviews').add({
+          name: name || 'Anonymous',
+          rating: reviewRating || 5,
+          text,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch(e) { console.error('Firestore write failed:', e); }
+    }
     document.getElementById('review-form-area').style.display = 'none';
     document.getElementById('review-success').style.display = 'block';
+    loadReviews();
   }
+
+  /* Load reviews from Firestore and render cards */
+  async function loadReviews() {
+    const grid = document.getElementById('customer-reviews-grid');
+    if (!grid || !db) {
+      if (grid) grid.innerHTML = '';
+      document.getElementById('reviews-published').style.display = 'none';
+      return;
+    }
+    try {
+      const snap = await db.collection('reviews').orderBy('date', 'desc').limit(20).get();
+      if (snap.empty) {
+        document.getElementById('reviews-published').style.display = 'none';
+        return;
+      }
+      document.getElementById('reviews-published').style.display = 'block';
+      grid.innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        const r = Math.min(5, Math.max(0, d.rating || 5));
+        const stars = '★'.repeat(r) + '☆'.repeat(5 - r);
+        const dateStr = d.date ? new Date(d.date.seconds * 1000).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+        const safeName = (d.name || 'Anonymous').replace(/</g,'&lt;');
+        const safeText = (d.text || '').replace(/</g,'&lt;');
+        return `<div class="review-card">
+          <div class="review-card-stars">${stars}</div>
+          <p class="review-card-text">"${safeText}"</p>
+          <div class="review-card-footer">
+            <span class="review-card-name">— ${safeName}</span>
+            ${dateStr ? `<span class="review-card-date">${dateStr}</span>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      console.error('Firestore read failed:', e);
+      document.getElementById('reviews-published').style.display = 'none';
+    }
+  }
+  loadReviews();
 
   /* CONTACT FORM */
   document.getElementById('contact-form').addEventListener('submit', function(e) {
@@ -1230,5 +1323,8 @@
     }, 7000);
   });
 </script>
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </body>
 </html>
