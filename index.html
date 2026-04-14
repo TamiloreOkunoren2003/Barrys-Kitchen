@@ -155,12 +155,19 @@
 
     /* ── GALLERY ────────────────────────── */
     #gallery { padding: 100px 5vw; background: var(--white); text-align: center; }
-    .gallery-mosaic { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; margin-top: 56px; }
+    .gallery-mosaic { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; margin-top: 56px; }
     .gallery-cell { overflow: hidden; position: relative; background: var(--green-pale); cursor: pointer; }
     .gallery-cell img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1; transition: transform .6s cubic-bezier(.4,0,.2,1); display: block; }
+    .gallery-cell.wide { grid-column: span 1; }
+    .gallery-cell.wide img { aspect-ratio: 1; }
     .gallery-cell:hover img { transform: scale(1.08); }
     .gallery-cell::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .3s; pointer-events: none; }
-    .gallery-cell:hover::after { background: rgba(0,0,0,.18); }
+    .gallery-cell:hover::after { background: rgba(0,0,0,.22); }
+    .gallery-cell:nth-child(n+11) { display: none; }
+    .gallery-mosaic.expanded .gallery-cell:nth-child(n+11) { display: block; }
+    .gallery-toggle-btn { display: block; margin: 20px auto 0; padding: 11px 36px; background: transparent; border: 1.5px solid var(--border); color: var(--text-mid); font-size: .76rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; border-radius: var(--radius); cursor: pointer; transition: border-color var(--ease), color var(--ease); }
+    .gallery-toggle-btn:hover { border-color: var(--green); color: var(--green); }
+    @media (max-width: 768px) { .gallery-mosaic { grid-template-columns: repeat(3,1fr); } }
     /* LIGHTBOX */
     .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.93); z-index: 1200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; }
     .lightbox.open { opacity: 1; pointer-events: all; }
@@ -172,11 +179,8 @@
     .lb-nav:hover { background: rgba(255,255,255,.2); color: #fff; }
     .lb-prev { left: 18px; }
     .lb-next { right: 18px; }
-    .gallery-cell.wide { grid-column: span 2; }
-    .gallery-cell.wide img { aspect-ratio: 2/1; }
     .gallery-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px; background: linear-gradient(transparent, rgba(0,0,0,.55)); color: var(--white); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; opacity: 0; transition: opacity var(--ease); }
     .gallery-cell:hover .gallery-label { opacity: 1; }
-    @media (max-width: 768px) { .gallery-mosaic { grid-template-columns: repeat(2,1fr); } .gallery-cell.wide { grid-column: span 2; } }
 
     /* ── TESTIMONIALS ───────────────────── */
     #testimonials { padding: 100px 5vw; background: var(--green); text-align: center; }
@@ -746,6 +750,7 @@
       <span class="gallery-label">Signature Bowls</span>
     </div>
   </div>
+  <button class="gallery-toggle-btn" id="gallery-toggle" onclick="galleryToggle()">View all photos ↓</button>
 </section>
 
 <!-- TESTIMONIALS -->
@@ -972,6 +977,15 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
   }, { threshold: 0.1 });
   revealEls.forEach(el => observer.observe(el));
+
+  /* GALLERY TOGGLE */
+  function galleryToggle() {
+    const mosaic = document.querySelector('.gallery-mosaic');
+    const btn = document.getElementById('gallery-toggle');
+    const expanded = mosaic.classList.toggle('expanded');
+    btn.textContent = expanded ? 'Show less ↑' : 'View all photos ↓';
+    if (!expanded) mosaic.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   /* LIGHTBOX */
   let lbImages = [], lbIdx = 0;
