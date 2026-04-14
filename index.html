@@ -260,6 +260,36 @@
     .pt-stew-item .pt-na { color: rgba(255,255,255,.22); }
     @media (max-width: 600px) { .pt-grid { grid-template-columns: 1fr; } .pt-col { padding: 28px 20px; } .pt-main-head, .pt-main-item { grid-template-columns: 1fr 80px 80px; } .pt-stew-head, .pt-stew-item { grid-template-columns: 1fr 68px 68px 68px; font-size: .8rem; } }
 
+    /* ── CART ───────────────────────────── */
+    .cart-nav-btn { position: relative; background: none; border: 1.5px solid var(--border); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-mid); transition: border-color var(--ease), color var(--ease); margin-left: 10px; flex-shrink: 0; }
+    .cart-nav-btn:hover { border-color: var(--green); color: var(--green); }
+    .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #fff; font-size: .6rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 3px; opacity: 0; transform: scale(0); transition: opacity .2s, transform .2s; pointer-events: none; }
+    .cart-badge.show { opacity: 1; transform: scale(1); }
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1100; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px,100vw); background: #0b2318; z-index: 1101; transform: translateX(100%); transition: transform .35s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,.35); }
+    .cart-panel.open { transform: translateX(0); }
+    .cart-head { display: flex; justify-content: space-between; align-items: center; padding: 26px 28px 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .cart-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 300; color: var(--gold-light); }
+    .cart-close-btn { background: none; color: rgba(255,255,255,.45); font-size: 1.3rem; cursor: pointer; padding: 4px 8px; transition: color var(--ease); line-height: 1; }
+    .cart-close-btn:hover { color: #fff; }
+    .cart-body { flex: 1; overflow-y: auto; padding: 20px 28px; }
+    .cart-empty-msg { color: rgba(255,255,255,.38); font-size: .88rem; text-align: center; margin-top: 52px; line-height: 2; }
+    .cart-empty-msg span { font-size: .76rem; display: block; }
+    .cart-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .cart-item-name { color: rgba(255,255,255,.85); font-size: .88rem; }
+    .cart-item-px { color: var(--gold-light); font-size: .76rem; margin-top: 2px; }
+    .cart-qty-ctrl { display: flex; align-items: center; gap: 8px; }
+    .cart-qty-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: none; color: #fff; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--ease); }
+    .cart-qty-btn:hover { background: rgba(255,255,255,.12); }
+    .cart-qty-num { color: #fff; font-size: .88rem; min-width: 20px; text-align: center; }
+    .cart-foot { padding: 18px 28px 28px; border-top: 1px solid rgba(255,255,255,.1); }
+    .cart-total-row { display: flex; justify-content: space-between; align-items: baseline; color: rgba(255,255,255,.7); font-size: .88rem; margin-bottom: 4px; }
+    .cart-total-val { font-family: var(--font-display); color: var(--gold-light); font-weight: 600; font-size: 1.25rem; }
+    .cart-foot-note { font-size: .72rem; color: rgba(255,255,255,.3); font-style: italic; margin-bottom: 18px; }
+    .cart-submit-btn { width: 100%; justify-content: center; gap: 10px; }
+    .add-to-order-btn { width: 100%; margin-top: 14px; padding: 9px 16px; background: transparent; border: 1.5px solid var(--green); color: var(--green); font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border-radius: var(--radius); cursor: pointer; transition: background var(--ease), color var(--ease); }
+    .add-to-order-btn:hover, .add-to-order-btn.added { background: var(--green); color: #fff; }
     /* ── BACK TO TOP ────────────────────── */
     #btt { position: fixed; bottom: 28px; right: 28px; z-index: 90; width: 44px; height: 44px; background: var(--green); color: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(20px); transition: opacity var(--ease), transform var(--ease), background var(--ease); pointer-events: none; }
     #btt.visible { opacity: 1; transform: none; pointer-events: all; }
@@ -283,6 +313,10 @@
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#contact" class="nav-cta">Order Now</a></li>
     </ul>
+    <button class="cart-nav-btn" id="cart-open-btn" aria-label="View order cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
     <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span><span></span>
     </button>
@@ -568,7 +602,6 @@
         <div class="pt-main-item"><span>Basmati Fried Rice</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>Coconut Rice</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>White Rice</span><span>$25</span><span>$40</span></div>
-        <hr class="pt-main-divider"/>
         <div class="pt-main-item"><span>Singapore Noodles</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>Ewa (Woro/Agoyin)</span><span>$60</span><span>$120</span></div>
         <div class="pt-main-item"><span>Yam Porridge</span><span>$100</span><span>$200</span></div>
@@ -619,7 +652,6 @@
     </div>
 
   </div>
-  <p class="pt-note reveal"><a href="tel:+13467142255" style="color:var(--gold-light)">346-714-2255</a></p>
 </section>
 
 <!-- GALLERY -->
@@ -847,6 +879,26 @@
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3M3 8l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </a>
 
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cart-overlay" aria-hidden="true"></div>
+<aside class="cart-panel" id="cart-panel" role="dialog" aria-modal="true" aria-label="Your order">
+  <div class="cart-head">
+    <h3 class="cart-title">Your Order</h3>
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Close cart">&#x2715;</button>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <p class="cart-empty-msg">No items added yet.<span>Browse the menu and tap "Add to Order".</span></p>
+  </div>
+  <div class="cart-foot" id="cart-foot" style="display:none;">
+    <div class="cart-total-row"><span>Estimated Total</span><span class="cart-total-val" id="cart-total-val">$0</span></div>
+    <p class="cart-foot-note">Final pricing confirmed on WhatsApp based on pan size.</p>
+    <button class="btn-primary cart-submit-btn" onclick="cartCheckout()">
+      Send Order via WhatsApp
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.477 2 2 6.477 2 11.99c0 1.76.46 3.41 1.26 4.84L2 22l5.31-1.24A9.953 9.953 0 0011.99 22C17.523 22 22 17.523 22 11.99S17.523 2 11.99 2z"/></svg>
+    </button>
+  </div>
+</aside>
+
 <script>
   /* NAV SCROLL */
   const nav = document.getElementById('nav');
@@ -907,6 +959,67 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
   }, { threshold: 0.1 });
   revealEls.forEach(el => observer.observe(el));
+
+  /* CART */
+  let cart = [];
+  function cartOpen() { document.getElementById('cart-panel').classList.add('open'); document.getElementById('cart-overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function cartClose() { document.getElementById('cart-panel').classList.remove('open'); document.getElementById('cart-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function cartAdd(name, price, priceText) {
+    const ex = cart.find(i => i.name === name);
+    if (ex) ex.qty++; else cart.push({name, price, priceText, qty: 1});
+    cartRender();
+  }
+  function cartRemove(name) {
+    const ex = cart.find(i => i.name === name);
+    if (!ex) return;
+    ex.qty--;
+    if (ex.qty <= 0) cart = cart.filter(i => i.name !== name);
+    cartRender();
+  }
+  function cartRender() {
+    const body = document.getElementById('cart-body');
+    const foot = document.getElementById('cart-foot');
+    const badge = document.getElementById('cart-badge');
+    const totalEl = document.getElementById('cart-total-val');
+    const totalQty = cart.reduce((s,i) => s + i.qty, 0);
+    badge.textContent = totalQty;
+    badge.classList.toggle('show', totalQty > 0);
+    foot.style.display = cart.length ? 'block' : 'none';
+    if (!cart.length) { body.innerHTML = '<p class="cart-empty-msg">No items added yet.<span>Browse the menu and tap "Add to Order".</span></p>'; return; }
+    const totalAmt = cart.reduce((s,i) => s + i.price * i.qty, 0);
+    totalEl.textContent = '$' + totalAmt.toLocaleString();
+    body.innerHTML = cart.map(i => `<div class="cart-item"><div><div class="cart-item-name">${i.name}</div><div class="cart-item-px">${i.priceText}</div></div><div class="cart-qty-ctrl"><button class="cart-qty-btn" onclick="cartRemove('${i.name.replace(/'/g,"\\'")}')">&#x2212;</button><span class="cart-qty-num">${i.qty}</span><button class="cart-qty-btn" onclick="cartAdd('${i.name.replace(/'/g,"\\'")}',${i.price},'${i.priceText.replace(/'/g,"\\'")}')">+</button></div></div>`).join('');
+  }
+  function cartCheckout() {
+    if (!cart.length) return;
+    const lines = cart.map(i => `• ${i.name}${i.qty > 1 ? ' x' + i.qty : ''}`).join('%0A');
+    window.open(`https://wa.me/13467142255?text=Hello%20Barry's%20Kitchen!%20I'd%20like%20to%20order:%0A%0A${lines}%0A%0APlease%20confirm%20availability%20and%20pan%20sizes.%20Thank%20you!`, '_blank');
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('cart-open-btn').addEventListener('click', cartOpen);
+    document.getElementById('cart-close-btn').addEventListener('click', cartClose);
+    document.getElementById('cart-overlay').addEventListener('click', cartClose);
+    document.querySelectorAll('.menu-item').forEach(item => {
+      const nameEl = item.querySelector('.menu-item-name');
+      const priceEl = item.querySelector('.menu-item-price');
+      if (!nameEl) return;
+      const name = nameEl.textContent.trim();
+      const priceText = priceEl ? priceEl.textContent.trim() : 'Full Pan';
+      const m = priceText.match(/\$(\d+(?:\.\d+)?)/);
+      const price = m ? parseFloat(m[1]) : 0;
+      const btn = document.createElement('button');
+      btn.className = 'add-to-order-btn';
+      btn.textContent = 'Add to Order';
+      btn.addEventListener('click', () => {
+        cartAdd(name, price, priceText || 'Full Pan');
+        btn.textContent = '✓ Added';
+        btn.classList.add('added');
+        setTimeout(() => { btn.textContent = 'Add to Order'; btn.classList.remove('added'); }, 1500);
+        cartOpen();
+      });
+      item.appendChild(btn);
+    });
+  });
 
   /* CONTACT FORM */
   document.getElementById('contact-form').addEventListener('submit', function(e) {
