@@ -155,19 +155,32 @@
 
     /* ── GALLERY ────────────────────────── */
     #gallery { padding: 100px 5vw; background: var(--white); text-align: center; }
-    .gallery-mosaic { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; margin-top: 56px; }
+    .gallery-folder { position: relative; width: 340px; margin: 56px auto 0; cursor: pointer; }
+    .gallery-folder-stack { position: relative; }
+    .gallery-folder-stack::before { content: ''; position: absolute; inset: 0; border-radius: 8px; background: rgba(180,145,60,.18); transform: rotate(-3deg) translate(-7px, 7px); z-index: 0; }
+    .gallery-folder-stack::after { content: ''; position: absolute; inset: 0; border-radius: 8px; background: rgba(180,145,60,.12); transform: rotate(1.8deg) translate(6px, 5px); z-index: 1; }
+    .gallery-folder-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; display: block; position: relative; z-index: 2; transition: transform .4s cubic-bezier(.4,0,.2,1); box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+    .gallery-folder:hover .gallery-folder-img { transform: scale(1.03) rotate(-0.5deg); }
+    .gallery-folder-count { position: absolute; top: -10px; right: -10px; z-index: 3; background: var(--gold); color: #fff; font-size: .68rem; font-weight: 600; letter-spacing: .08em; padding: 4px 10px; border-radius: 20px; }
+    .gallery-view-btn { display: block; margin: 26px auto 0; padding: 11px 36px; background: transparent; border: 1.5px solid var(--green); color: var(--green); font-size: .76rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; border-radius: var(--radius); cursor: pointer; transition: background var(--ease), color var(--ease); }
+    .gallery-view-btn:hover { background: var(--green); color: #fff; }
+    /* Gallery Modal */
+    .gallery-modal { position: fixed; inset: 0; z-index: 1150; background: rgba(4,24,12,.97); overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .gallery-modal.open { opacity: 1; pointer-events: all; }
+    .gallery-modal-inner { max-width: 1100px; margin: 0 auto; padding: 64px 24px 56px; }
+    .gallery-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    .gallery-modal-title { color: var(--gold); font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; letter-spacing: .06em; }
+    .gallery-modal-close { background: none; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.7); width: 42px; height: 42px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, color .2s; }
+    .gallery-modal-close:hover { border-color: #fff; color: #fff; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
     .gallery-cell { overflow: hidden; position: relative; background: var(--green-pale); cursor: pointer; }
     .gallery-cell img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1; transition: transform .6s cubic-bezier(.4,0,.2,1); display: block; }
-    .gallery-cell.wide { grid-column: span 1; }
-    .gallery-cell.wide img { aspect-ratio: 1; }
     .gallery-cell:hover img { transform: scale(1.08); }
     .gallery-cell::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .3s; pointer-events: none; }
     .gallery-cell:hover::after { background: rgba(0,0,0,.22); }
-    .gallery-cell:nth-child(n+11) { display: none; }
-    .gallery-mosaic.expanded .gallery-cell:nth-child(n+11) { display: block; }
-    .gallery-toggle-btn { display: block; margin: 20px auto 0; padding: 11px 36px; background: transparent; border: 1.5px solid var(--border); color: var(--text-mid); font-size: .76rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; border-radius: var(--radius); cursor: pointer; transition: border-color var(--ease), color var(--ease); }
-    .gallery-toggle-btn:hover { border-color: var(--green); color: var(--green); }
-    @media (max-width: 768px) { .gallery-mosaic { grid-template-columns: repeat(3,1fr); } }
+    .gallery-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px; background: linear-gradient(transparent, rgba(0,0,0,.6)); color: var(--white); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; opacity: 0; transition: opacity var(--ease); }
+    .gallery-cell:hover .gallery-label { opacity: 1; }
+    @media (max-width: 768px) { .gallery-grid { grid-template-columns: repeat(2,1fr); } .gallery-folder { width: 78vw; } }
     /* LIGHTBOX */
     .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.93); z-index: 1200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; }
     .lightbox.open { opacity: 1; pointer-events: all; }
@@ -672,85 +685,102 @@
   <h2 id="gallery-heading" class="section-title reveal reveal-d1">From Our <em>Kitchen</em></h2>
   <div class="gold-rule reveal reveal-d2" aria-hidden="true"><span></span><i></i><span></span></div>
 
-  <div class="gallery-mosaic">
-    <div class="gallery-cell wide reveal">
-      <img src="images/Setup.jpeg" alt="Full catering spread" loading="lazy"/>
-      <span class="gallery-label">Catering Setup</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d1">
-      <img src="images/Jollof Rice (2).jpeg" alt="Jollof Rice" loading="lazy"/>
-      <span class="gallery-label">Jollof Rice</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Fried Rice (2).jpeg" alt="Fried Rice" loading="lazy"/>
-      <span class="gallery-label">Fried Rice</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d1">
-      <img src="images/Efo Riro.jpeg" alt="Efo Riro" loading="lazy"/>
-      <span class="gallery-label">Efo Riro</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Ofada Sauce.jpeg" alt="Ofada Sauce" loading="lazy"/>
-      <span class="gallery-label">Ofada Sauce</span>
-    </div>
-    <div class="gallery-cell wide reveal reveal-d1">
-      <img src="images/Kitchen Staff.jpeg" alt="Barry's Kitchen catering team" loading="lazy"/>
-      <span class="gallery-label">Our Team</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Peppered Chicken (2).jpeg" alt="Peppered Chicken" loading="lazy" style="filter:saturate(1.4) contrast(1.1);object-position:center 40%;"/>
-      <span class="gallery-label">Chicken</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d3">
-      <img src="images/Peppered Turkey.jpeg" alt="Peppered Turkey" loading="lazy"/>
-      <span class="gallery-label">Turkey</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d1">
-      <img src="images/Moi Moi.jpeg" alt="Moi-Moi" loading="lazy" style="filter:saturate(1.4) contrast(1.1);object-position:center 30%;"/>
-      <span class="gallery-label">Moi-Moi</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Ofada Rice.jpeg" alt="Ofada Rice" loading="lazy"/>
-      <span class="gallery-label">Ofada Rice</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d3">
-      <img src="images/Pounded Yam.jpeg" alt="Pounded Yam" loading="lazy"/>
-      <span class="gallery-label">Pounded Yam</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d1">
-      <img src="images/Fried_Plantain.jpeg" alt="Fried Plantain" loading="lazy"/>
-      <span class="gallery-label">Fried Plantain</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Yam Porridge.jpeg" alt="Yam Porridge" loading="lazy"/>
-      <span class="gallery-label">Yam Porridge</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d3">
-      <img src="images/Beef Stew - Copy.jpeg" alt="Signature Ata Rilli" loading="lazy"/>
-      <span class="gallery-label">Signature Ata Rilli</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d4">
-      <img src="images/Peppered_Fish.jpeg" alt="Peppered Fish" loading="lazy"/>
-      <span class="gallery-label">Peppered Fish</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Singapore Noodles.jpeg" alt="Singapore Noodles" loading="lazy"/>
-      <span class="gallery-label">Singapore Noodles</span>
-    </div>
-    <div class="gallery-cell wide reveal reveal-d3">
-      <img src="images/Protein Table.jpeg" alt="Barry's Kitchen full catering display" loading="lazy"/>
-      <span class="gallery-label">Full Catering Display</span>
-    </div>
-    <div class="gallery-cell wide reveal reveal-d1">
-      <img src="images/Stews.jpeg" alt="Stews and soups in bowls" loading="lazy"/>
-      <span class="gallery-label">Soups &amp; Stews</span>
-    </div>
-    <div class="gallery-cell reveal reveal-d2">
-      <img src="images/Stews 2.jpeg" alt="Row of stew bowls" loading="lazy"/>
-      <span class="gallery-label">Signature Bowls</span>
+  <!-- Folder cover -->
+  <div class="gallery-folder reveal" onclick="galleryModalOpen()">
+    <div class="gallery-folder-stack">
+      <span class="gallery-folder-count">19 photos</span>
+      <img class="gallery-folder-img" src="images/Setup.jpeg" alt="Barry's Kitchen gallery"/>
     </div>
   </div>
-  <button class="gallery-toggle-btn" id="gallery-toggle" onclick="galleryToggle()">View all photos ↓</button>
+  <button class="gallery-view-btn reveal" onclick="galleryModalOpen()">View Gallery</button>
+
+  <!-- Gallery Modal -->
+  <div class="gallery-modal" id="gallery-modal" role="dialog" aria-modal="true" aria-label="Photo gallery">
+    <div class="gallery-modal-inner">
+      <div class="gallery-modal-header">
+        <span class="gallery-modal-title">From Our Kitchen</span>
+        <button class="gallery-modal-close" onclick="galleryModalClose()" aria-label="Close gallery">&#x2715;</button>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-cell">
+          <img src="images/Setup.jpeg" alt="Full catering spread" loading="lazy"/>
+          <span class="gallery-label">Catering Setup</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Jollof Rice (2).jpeg" alt="Jollof Rice" loading="lazy"/>
+          <span class="gallery-label">Jollof Rice</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Fried Rice (2).jpeg" alt="Fried Rice" loading="lazy"/>
+          <span class="gallery-label">Fried Rice</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Efo Riro.jpeg" alt="Efo Riro" loading="lazy"/>
+          <span class="gallery-label">Efo Riro</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Ofada Sauce.jpeg" alt="Ofada Sauce" loading="lazy"/>
+          <span class="gallery-label">Ofada Sauce</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Kitchen Staff.jpeg" alt="Barry's Kitchen catering team" loading="lazy"/>
+          <span class="gallery-label">Our Team</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Peppered Chicken (2).jpeg" alt="Peppered Chicken" loading="lazy" style="filter:saturate(1.4) contrast(1.1);object-position:center 40%;"/>
+          <span class="gallery-label">Chicken</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Peppered Turkey.jpeg" alt="Peppered Turkey" loading="lazy"/>
+          <span class="gallery-label">Turkey</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Moi Moi.jpeg" alt="Moi-Moi" loading="lazy" style="filter:saturate(1.4) contrast(1.1);object-position:center 30%;"/>
+          <span class="gallery-label">Moi-Moi</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Ofada Rice.jpeg" alt="Ofada Rice" loading="lazy"/>
+          <span class="gallery-label">Ofada Rice</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Pounded Yam.jpeg" alt="Pounded Yam" loading="lazy"/>
+          <span class="gallery-label">Pounded Yam</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Fried_Plantain.jpeg" alt="Fried Plantain" loading="lazy"/>
+          <span class="gallery-label">Fried Plantain</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Yam Porridge.jpeg" alt="Yam Porridge" loading="lazy"/>
+          <span class="gallery-label">Yam Porridge</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Beef Stew - Copy.jpeg" alt="Signature Ata Rilli" loading="lazy"/>
+          <span class="gallery-label">Signature Ata Rilli</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Peppered_Fish.jpeg" alt="Peppered Fish" loading="lazy"/>
+          <span class="gallery-label">Peppered Fish</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Singapore Noodles.jpeg" alt="Singapore Noodles" loading="lazy"/>
+          <span class="gallery-label">Singapore Noodles</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Protein Table.jpeg" alt="Barry's Kitchen full catering display" loading="lazy"/>
+          <span class="gallery-label">Full Catering Display</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Stews.jpeg" alt="Stews and soups in bowls" loading="lazy"/>
+          <span class="gallery-label">Soups &amp; Stews</span>
+        </div>
+        <div class="gallery-cell">
+          <img src="images/Stews 2.jpeg" alt="Row of stew bowls" loading="lazy"/>
+          <span class="gallery-label">Signature Bowls</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- TESTIMONIALS -->
@@ -978,14 +1008,19 @@
   }, { threshold: 0.1 });
   revealEls.forEach(el => observer.observe(el));
 
-  /* GALLERY TOGGLE */
-  function galleryToggle() {
-    const mosaic = document.querySelector('.gallery-mosaic');
-    const btn = document.getElementById('gallery-toggle');
-    const expanded = mosaic.classList.toggle('expanded');
-    btn.textContent = expanded ? 'Show less ↑' : 'View all photos ↓';
-    if (!expanded) mosaic.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  /* GALLERY MODAL */
+  function galleryModalOpen() {
+    const modal = document.getElementById('gallery-modal');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
+  function galleryModalClose() {
+    document.getElementById('gallery-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('gallery-modal').classList.contains('open') && !document.getElementById('lightbox').classList.contains('open')) galleryModalClose();
+  });
 
   /* LIGHTBOX */
   let lbImages = [], lbIdx = 0;
@@ -1054,8 +1089,8 @@
     window.open(`https://wa.me/13467142255?text=Hello%20Barry's%20Kitchen!%20I'd%20like%20to%20order:%0A%0A${lines}%0A%0APlease%20confirm%20availability%20and%20pan%20sizes.%20Thank%20you!`, '_blank');
   }
   document.addEventListener('DOMContentLoaded', () => {
-    // Gallery lightbox
-    document.querySelectorAll('.gallery-cell').forEach((cell, i) => {
+    // Gallery lightbox — wire cells inside the modal grid
+    document.querySelectorAll('.gallery-grid .gallery-cell').forEach((cell, i) => {
       const img = cell.querySelector('img');
       const label = cell.querySelector('.gallery-label');
       if (!img) return;
