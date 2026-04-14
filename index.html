@@ -209,6 +209,24 @@
     .testimonial-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); transition: background var(--ease), transform var(--ease); }
     .testimonial-dot.active { background: var(--gold); transform: scale(1.4); }
 
+    /* ── LEAVE A REVIEW ─────────────────── */
+    #leave-review { padding: 100px 5vw; background: var(--off-white); text-align: center; }
+    .review-form-wrap { max-width: 620px; margin: 56px auto 0; text-align: left; }
+    .star-row { display: flex; gap: 8px; margin-bottom: 28px; }
+    .star-btn { background: none; border: none; font-size: 2rem; line-height: 1; cursor: pointer; color: #d4c08a; transition: color .15s, transform .15s; padding: 0; }
+    .star-btn.lit { color: var(--gold); }
+    .star-btn:hover { transform: scale(1.18); }
+    .review-field { width: 100%; padding: 13px 16px; background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: var(--font-body); font-size: .9rem; color: var(--text-dark); transition: border-color var(--ease); box-sizing: border-box; outline: none; }
+    .review-field:focus { border-color: var(--green); }
+    textarea.review-field { resize: vertical; min-height: 130px; }
+    .review-label { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 8px; margin-top: 20px; }
+    .review-label:first-child { margin-top: 0; }
+    .review-submit-btn { display: block; width: 100%; margin-top: 24px; padding: 14px 24px; background: var(--green); color: #fff; border: none; border-radius: var(--radius); font-family: var(--font-body); font-size: .8rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: background var(--ease), transform var(--ease); }
+    .review-submit-btn:hover { background: #1a4d35; transform: translateY(-1px); }
+    .review-success { display: none; text-align: center; padding: 40px 24px; }
+    .review-success-icon { font-size: 2.6rem; margin-bottom: 12px; }
+    .review-success-msg { font-family: var(--font-display); font-size: 1.3rem; font-style: italic; color: var(--green); }
+    .review-success-sub { font-size: .85rem; color: var(--text-mid); margin-top: 8px; }
     /* ── CONTACT ────────────────────────── */
     #contact { display: grid; grid-template-columns: 1fr 1fr; }
     .contact-info { background: var(--text-dark); padding: 80px 6vw; display: flex; flex-direction: column; justify-content: center; }
@@ -341,6 +359,7 @@
       <li><a href="#menu">Menu</a></li>
       <li><a href="#protein-table">Pricing</a></li>
       <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#leave-review">Reviews</a></li>
       <li><a href="#contact" class="nav-cta">Order Now</a></li>
     </ul>
     <button class="cart-nav-btn" id="cart-open-btn" aria-label="View order cart">
@@ -817,6 +836,40 @@
   </div>
 </section>
 
+<!-- LEAVE A REVIEW -->
+<section id="leave-review" aria-labelledby="review-heading">
+  <span class="section-label reveal">Share Your Experience</span>
+  <h2 id="review-heading" class="section-title reveal reveal-d1">Leave a <em>Review</em></h2>
+  <div class="gold-rule reveal reveal-d2" aria-hidden="true"><span></span><i></i><span></span></div>
+
+  <div class="review-form-wrap">
+    <div id="review-form-area">
+      <label class="review-label" for="review-name">Your Name</label>
+      <input class="review-field" type="text" id="review-name" placeholder="e.g. Adaeze O." autocomplete="name"/>
+
+      <label class="review-label">Your Rating</label>
+      <div class="star-row" id="star-row" role="group" aria-label="Star rating">
+        <button class="star-btn" data-val="1" aria-label="1 star" type="button">&#9733;</button>
+        <button class="star-btn" data-val="2" aria-label="2 stars" type="button">&#9733;</button>
+        <button class="star-btn" data-val="3" aria-label="3 stars" type="button">&#9733;</button>
+        <button class="star-btn" data-val="4" aria-label="4 stars" type="button">&#9733;</button>
+        <button class="star-btn" data-val="5" aria-label="5 stars" type="button">&#9733;</button>
+      </div>
+
+      <label class="review-label" for="review-text">Your Review</label>
+      <textarea class="review-field" id="review-text" placeholder="Tell us about your experience with Barry's Kitchen…" rows="5"></textarea>
+
+      <button class="review-submit-btn" id="review-submit-btn" type="button" onclick="submitReview()">Send Review via WhatsApp</button>
+    </div>
+
+    <div class="review-success" id="review-success">
+      <div class="review-success-icon">&#10003;</div>
+      <p class="review-success-msg">Thank you for your review!</p>
+      <p class="review-success-sub">Your message has been sent to us via WhatsApp. We truly appreciate your feedback.</p>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact" aria-labelledby="contact-heading">
   <div class="contact-info">
@@ -1122,6 +1175,32 @@
       item.appendChild(btn);
     });
   });
+
+  /* REVIEW FORM */
+  let reviewRating = 0;
+  (function() {
+    const stars = document.querySelectorAll('.star-btn');
+    function paint(n) {
+      stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.val) <= n));
+    }
+    stars.forEach(s => {
+      s.addEventListener('click', () => { reviewRating = parseInt(s.dataset.val); paint(reviewRating); });
+      s.addEventListener('mouseenter', () => paint(parseInt(s.dataset.val)));
+      s.addEventListener('mouseleave', () => paint(reviewRating));
+    });
+  })();
+  function submitReview() {
+    const name = document.getElementById('review-name').value.trim();
+    const text = document.getElementById('review-text').value.trim();
+    if (!text) { document.getElementById('review-text').focus(); return; }
+    const stars = reviewRating > 0 ? '⭐'.repeat(reviewRating) : '';
+    const namePart = name ? `*${name}* says:%0A` : '';
+    const ratingPart = stars ? `Rating: ${stars}%0A` : '';
+    const msg = `Hello Barry's Kitchen! I'd like to leave a review:%0A%0A${namePart}${ratingPart}%0A"${encodeURIComponent(text)}"`;
+    window.open(`https://wa.me/13467142255?text=${msg}`, '_blank');
+    document.getElementById('review-form-area').style.display = 'none';
+    document.getElementById('review-success').style.display = 'block';
+  }
 
   /* CONTACT FORM */
   document.getElementById('contact-form').addEventListener('submit', function(e) {
