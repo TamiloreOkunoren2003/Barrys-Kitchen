@@ -856,16 +856,6 @@
   <h2 id="review-heading" class="section-title reveal reveal-d1">Leave a <em>Review</em></h2>
   <div class="gold-rule reveal reveal-d2" aria-hidden="true"><span></span><i></i><span></span></div>
 
-  <!-- Published reviews grid -->
-  <div class="reviews-published" id="reviews-published">
-    <p class="reviews-pub-heading">What Our Customers Say</p>
-    <div class="review-cards-grid" id="customer-reviews-grid">
-      <p class="reviews-loading">Loading reviews…</p>
-    </div>
-  </div>
-
-  <hr class="reviews-divider"/>
-
   <div class="review-form-wrap">
     <div id="review-form-area">
       <label class="review-label" for="review-name">Your Name</label>
@@ -889,7 +879,7 @@
     <div class="review-success" id="review-success">
       <div class="review-success-icon">&#10003;</div>
       <p class="review-success-msg">Thank you for your review!</p>
-      <p class="review-success-sub">Your review is now live on the site. We truly appreciate your feedback.</p>
+      <p class="review-success-sub">We truly appreciate your feedback.</p>
     </div>
   </div>
 </section>
@@ -1202,32 +1192,7 @@
     });
   });
 
-  /* FIREBASE + REVIEW FORM
-   * ─────────────────────────────────────────────────────────────────
-   * SETUP (one-time, ~5 minutes):
-   * 1. Go to https://console.firebase.google.com and sign in with Google
-   * 2. Click "Add project" → name it "barrys-kitchen" → Create
-   * 3. In the left sidebar: Build → Firestore Database → Create database
-   *    → Start in TEST MODE → choose a region → Enable
-   * 4. Click the gear ⚙ → Project settings → "Your apps" → </> Web
-   *    → Register app → copy the firebaseConfig values below
-   * ─────────────────────────────────────────────────────────────────
-   */
-  const firebaseConfig = {
-    apiKey:            "PASTE_API_KEY_HERE",
-    authDomain:        "PASTE_PROJECT_ID.firebaseapp.com",
-    projectId:         "PASTE_PROJECT_ID_HERE",
-    storageBucket:     "PASTE_PROJECT_ID.appspot.com",
-    messagingSenderId: "PASTE_MESSAGING_SENDER_ID",
-    appId:             "PASTE_APP_ID_HERE"
-  };
-  let db = null;
-  try {
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-  } catch(e) { console.warn('Firebase not configured yet:', e.message); }
-
-  /* Star rating interaction */
+  /* REVIEW FORM */
   let reviewRating = 0;
   (function() {
     const stars = document.querySelectorAll('.star-btn');
@@ -1238,66 +1203,18 @@
       s.addEventListener('mouseleave', () => paint(reviewRating));
     });
   })();
-
-  /* Submit review → save to Firestore → show success */
-  async function submitReview() {
+  function submitReview() {
     const name = document.getElementById('review-name').value.trim();
     const text = document.getElementById('review-text').value.trim();
     if (!text) { document.getElementById('review-text').focus(); return; }
-    const btn = document.getElementById('review-submit-btn');
-    btn.disabled = true; btn.textContent = 'Submitting…';
-    if (db) {
-      try {
-        await db.collection('reviews').add({
-          name: name || 'Anonymous',
-          rating: reviewRating || 5,
-          text,
-          date: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      } catch(e) { console.error('Firestore write failed:', e); }
-    }
+    const stars = reviewRating > 0 ? '⭐'.repeat(reviewRating) : '';
+    const namePart = name ? `*${name}* says:%0A` : '';
+    const ratingPart = stars ? `Rating: ${stars}%0A` : '';
+    const msg = `Hello Barry's Kitchen! I'd like to leave a review:%0A%0A${namePart}${ratingPart}%0A"${encodeURIComponent(text)}"`;
+    window.open(`https://wa.me/13467142255?text=${msg}`, '_blank');
     document.getElementById('review-form-area').style.display = 'none';
     document.getElementById('review-success').style.display = 'block';
-    loadReviews();
   }
-
-  /* Load reviews from Firestore and render cards */
-  async function loadReviews() {
-    const grid = document.getElementById('customer-reviews-grid');
-    if (!grid || !db) {
-      if (grid) grid.innerHTML = '';
-      document.getElementById('reviews-published').style.display = 'none';
-      return;
-    }
-    try {
-      const snap = await db.collection('reviews').orderBy('date', 'desc').limit(20).get();
-      if (snap.empty) {
-        document.getElementById('reviews-published').style.display = 'none';
-        return;
-      }
-      document.getElementById('reviews-published').style.display = 'block';
-      grid.innerHTML = snap.docs.map(doc => {
-        const d = doc.data();
-        const r = Math.min(5, Math.max(0, d.rating || 5));
-        const stars = '★'.repeat(r) + '☆'.repeat(5 - r);
-        const dateStr = d.date ? new Date(d.date.seconds * 1000).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
-        const safeName = (d.name || 'Anonymous').replace(/</g,'&lt;');
-        const safeText = (d.text || '').replace(/</g,'&lt;');
-        return `<div class="review-card">
-          <div class="review-card-stars">${stars}</div>
-          <p class="review-card-text">"${safeText}"</p>
-          <div class="review-card-footer">
-            <span class="review-card-name">— ${safeName}</span>
-            ${dateStr ? `<span class="review-card-date">${dateStr}</span>` : ''}
-          </div>
-        </div>`;
-      }).join('');
-    } catch(e) {
-      console.error('Firestore read failed:', e);
-      document.getElementById('reviews-published').style.display = 'none';
-    }
-  }
-  loadReviews();
 
   /* CONTACT FORM */
   document.getElementById('contact-form').addEventListener('submit', function(e) {
@@ -1323,8 +1240,5 @@
     }, 7000);
   });
 </script>
-<!-- Firebase SDK (compat) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </body>
 </html>
